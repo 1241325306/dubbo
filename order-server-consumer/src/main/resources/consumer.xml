@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--配置Spring扫描-->
+    <context:component-scan base-package="com.dubbo.serverImpl"></context:component-scan>
+
+    <!--指定消费者项目名-->
+    <dubbo:application name="order-server-consumer"></dubbo:application>
+
+    <!--指定注册中心地址-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"></dubbo:registry>
+
+    <!--配置需要调用的远程服务的借口-->
+    <!--timeour请求超时时间 默认1000ms-->
+    <!--retries重复次数，不包含第一次调用 0代表不重试-->
+    <!--幂等（设置重试次数）（查找，删除，修改）、分幂等（不能设置重试次数）（新增）-->
+    <dubbo:reference interface="com.dubbo.interfaces.UserService"
+                     id="userService"
+                     timeout="2000"
+                     retries="3"
+                     version="2.0.0"/>
+
+    <!--配置监听-->
+    <dubbo:monitor protocol="registry"></dubbo:monitor>
+
+</beans>
